@@ -1,45 +1,38 @@
-// ex2.test.js
+/**
+ * @jest-environment jsdom
+ */
 
-// Importez JSDOM pour simuler un environnement de navigateur
-const { JSDOM } = require('jsdom');
+const { setup } = require('./ex2');
 
-// Chargez votre fichier ex2.js ici
-const fs = require('fs');
-const path = require('path');
-const ex2Path = path.resolve(__dirname, 'ex2.js');
-const ex2Code = fs.readFileSync(ex2Path, 'utf8');
+describe('ex2', () => {
+  let clickMeButton;
+  let message;
+  let showMessage;
 
-// Définissez un exemple de test avec Jest
-describe('Test pour ex2.js', () => {
-  let window;
-
-  // Avant chaque test, initialisez JSDOM
   beforeEach(() => {
-    const dom = new JSDOM(`
-      <!DOCTYPE html>
-      <html>
-      <body>
-        <button id="click-me-button">Click me</button>
-        <p id="message"></p>
-        <script>${ex2Code}</script>
-      </body>
-      </html>
-    `, { runScripts: 'dangerously' });
-
-    window = dom.window;
+    // Configurer le DOM avant chaque test
+    document.body.innerHTML = `
+      <button id="click-me-button">Click Me!</button>
+      <p id="message"></p>
+    `;
   });
 
-  // Exemple de test
-  test('La fonction showMessage modifie le contenu du message', () => {
-    // Simuler un clic sur le bouton
-    const clickMeButton = window.document.getElementById('click-me-button');
+  test('should render clickMeButton and message elements', () => {
+    ({ clickMeButton, message } = setup());
+    expect(clickMeButton).toBeDefined(); // Vérifie si clickMeButton est défini
+    expect(message).toBeDefined(); // Vérifie si message est défini
+  });
+
+  test('should call showMessage function when clickMeButton is clicked', () => {
+    showMessage = jest.fn();
+    ({ clickMeButton } = setup(showMessage));
     clickMeButton.click();
-
-    // Vérifier si le texte du message a changé comme prévu
-    const messageElement = window.document.getElementById('message');
-    expect(messageElement.textContent).toBe('Text has changed');
+    expect(showMessage).toHaveBeenCalledTimes(1); // Vérifie si showMessage a été appelée une fois
   });
 
-  // Vous pouvez ajouter d'autres tests ici
+  test('should update the message text when showMessage is called', () => {
+    ({ clickMeButton, message } = setup());
+    clickMeButton.click();
+    expect(message.textContent).toBe('Text has changed'); // Vérifie le texte du message
+  });
 });
-

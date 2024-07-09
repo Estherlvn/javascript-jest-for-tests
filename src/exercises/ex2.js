@@ -1,11 +1,14 @@
-clickMeButton.addEventListener('click', showMessage);
+function setup(showMessageCallback) {
+  const clickMeButton = document.getElementById('click-me-button');
+  const message = document.getElementById('message');
 
-const clickMeButton = document.getElementById('click-me-button');
-const message = document.getElementById('message');
+  const showMessage = showMessageCallback || function showMessage() {
+    message.textContent = "Text has changed";
+  };
 
-function showMessage() {
-  // Change the text content of the 'message' paragraph.
-  message.textContent = "Text has changed";
+  clickMeButton.addEventListener('click', showMessage);
+
+  return { clickMeButton, message, showMessage };
 }
 
-clickMeButton.addEventListener('click', showMessage);
+module.exports = { setup };
