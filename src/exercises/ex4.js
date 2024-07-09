@@ -1,31 +1,36 @@
-/* EXAMPLE OF AN API REQUEST */
+// ex4.js
 
-/*
-let longitude = 44.83; // Bordeaux longitude
-let latitude = -0.57; // Bordeaux latitude
-let api_key = '891fcaaa0f613df11046ed15bd1a4607'; // Teacher's API Key
-let api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${api_key}`; // API URL
+const apiKey = '08cb792ca8906ae401dad848ccb6410d';
+const latitude = 44.83; // Exemple de latitude (Bordeaux)
+const longitude = -0.57; // Exemple de longitude (Bordeaux)
+const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
 
-const getWeather = () => {
-  axios.get(api_url)
-  .then((response)=>console.log(response.data.main.temp - 273.15))
-  .catch((err)=> console.log(err))
-}
-getWeather();
-*/
-
-
-
-
-export const fetchData = async () => {
-    // Your code here: Implement an API request (e.g., fetch data from a fictional API).
-  };
-  
-  // script.js
-  import { fetchData } from './ex4';
-  
-  function displayData() {
-    // Your code here: Fetch and display data from the API using fetchData.
+const fetchData = async () => {
+  try {
+    let response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    let data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
   }
-  
-  document.addEventListener('DOMContentLoaded', displayData);
+};
+
+// Fonction pour afficher les données
+const displayData = async () => {
+  try {
+    let data = await fetchData();
+    if (data) {
+      console.log(data); // Affiche les données dans la console du navigateur
+      // Ici, vous pouvez mettre à jour votre interface utilisateur avec les données récupérées
+    }
+  } catch (error) {
+    console.error('Error displaying data:', error);
+  }
+};
+
+// Écouteur d'événement pour charger le DOM
+document.addEventListener('DOMContentLoaded', displayData);

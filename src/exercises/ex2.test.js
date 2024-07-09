@@ -36,3 +36,4 @@ describe('ex2', () => {
     expect(message.textContent).toBe('Text has changed'); // Vérifie le texte du message
   });
 });
+
